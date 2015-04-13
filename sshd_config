@@ -43,6 +43,8 @@ HostbasedAuthentication no
 # Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
 #IgnoreUserKnownHosts yes
 
+UseDNS no
+
 # To enable empty passwords, change to yes (NOT RECOMMENDED)
 PermitEmptyPasswords no
 

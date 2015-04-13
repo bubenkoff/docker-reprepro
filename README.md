@@ -13,7 +13,7 @@ To create the image `bbinet/reprepro`, execute the following command in the
     docker build -t bbinet/reprepro .
 
 You can now push the new image to the public registry:
-    
+
     docker push bbinet/reprepro
 
 
@@ -59,7 +59,7 @@ For example:
         -v /home/reprepro/config:/config:ro \
         -p 22:22 \
         bbinet/reprepro
-        
+
 Usage
 -----
 
@@ -74,7 +74,7 @@ method = scp
 login = reprepro
 allow_unsigned_uploads = 0
 allowed_distributions = wheezy
-post_upload_command = ssh %(login)s@%(fqdn)s reprepro processincoming incoming
+post_upload_command = ssh %(login)s@%(fqdn)s reprepro include /data/debian/incoming
 ```
 
 sources.list:

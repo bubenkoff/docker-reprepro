@@ -44,7 +44,7 @@ else
     echo "=> /data/debian directory does not exist:"
     echo "   Configuring a default debian repository with reprepro..."
 
-    keyid=$(gpg --dry-run /config/reprepro_pub.gpg | sed "s/.*\/\([^ ]*\).*/\1/")
+    keyid=$(gpg --dry-run /config/reprepro_pub.gpg | grep pub | sed "s/.*\/\([^ ]*\).*/\1/")
     if [ -z "$keyid" ]
     then
         echo "=> Please provide /config/reprepro_pub.gpg file to guess the key id to use for reprepro to sign pakages..."
@@ -63,34 +63,33 @@ EOF
 Name: incoming
 IncomingDir: /data/debian/incoming
 TempDir: /data/debian/tmp
-Allow: wheezy>wheezy/dev
+Allow: ${REPREPRO_ALLOW}
 Cleanup: on_deny on_error
 EOF
     cat << EOF > /data/debian/conf/distributions
 Origin: ${REPREPRO_DEFAULT_NAME}
 Label: ${REPREPRO_DEFAULT_NAME}
-Codename: wheezy/dev
+Codename: ${REPREPRO_CODENAME_DEV}
 Architectures: i386 amd64 armhf source
 Components: main
 Description: ${REPREPRO_DEFAULT_NAME} debian repository
-DebOverride: override.wheezy
-DscOverride: override.wheezy
+DebOverride: override.${REPREPRO_CODENAME}
+DscOverride: override.${REPREPRO_CODENAME}
 SignWith: ${keyid}
 
 Origin: ${REPREPRO_DEFAULT_NAME}
 Label: ${REPREPRO_DEFAULT_NAME}
-Codename: wheezy/prod
+Codename: ${REPREPRO_CODENAME_PROD}
 Architectures: i386 amd64 armhf source
 Components: main
 Description: ${REPREPRO_DEFAULT_NAME} debian repository
-DebOverride: override.wheezy
-DscOverride: override.wheezy
+DebOverride: override.${REPREPRO_CODENAME}
+DscOverride: override.${REPREPRO_CODENAME}
 SignWith: ${keyid}
 EOF
-    touch /data/debian/conf/override.wheezy
+    touch /data/debian/conf/override.${REPREPRO_CODENAME}
     chown -R reprepro:reprepro /data/debian
 fi
 
 echo "=> Starting SSH server..."
-exec /usr/sbin/sshd -f /sshd_config -D
-
+exec /usr/sbin/sshd -f /sshd_config -D -e
